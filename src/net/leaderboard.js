@@ -30,6 +30,7 @@ export async function submitSeason(entry) {
       method: 'POST',
       headers: headers({ Prefer: 'return=minimal' }),
       body: JSON.stringify({
+        player_id: entry.playerId,
         player: entry.player,
         wins: entry.wins,
         losses: entry.losses,
@@ -55,7 +56,7 @@ export async function fetchGlobal(limit = 100) {
   try {
     const url =
       `${SUPABASE_URL}/rest/v1/${TABLE}` +
-      `?select=player,wins,losses,points,strength,mode,qb,created_at` +
+      `?select=player_id,player,wins,losses,points,strength,mode,qb,created_at` +
       `&order=points.desc&limit=1000`
     const res = await fetch(url, { headers: headers() })
     if (!res.ok) throw new Error(`http ${res.status}`)
@@ -66,13 +67,16 @@ export async function fetchGlobal(limit = 100) {
   }
 }
 
-// Collapse many seasons into a per-player best, highest points first.
+// Collapse many seasons into a per-player best, highest points first. Grouping
+// is by the stable id where there is one, so a player who renamed themselves
+// stays a single row rather than appearing twice.
 function rankBest(rows) {
   const best = new Map()
   for (const r of rows) {
     const name = r.player || 'Guest'
-    const prev = best.get(name)
-    if (!prev || r.points > prev.points) best.set(name, { ...r, player: name })
+    const key = r.playerId || r.player_id || name
+    const prev = best.get(key)
+    if (!prev || r.points > prev.points) best.set(key, { ...r, player: name })
   }
   return [...best.values()].sort((a, b) => b.points - a.points)
 }

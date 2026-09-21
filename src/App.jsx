@@ -6,7 +6,13 @@ import Leaderboard from './components/Leaderboard.jsx'
 import Prizes from './components/Prizes.jsx'
 import Wallet from './components/Wallet.jsx'
 import Profile from './components/Profile.jsx'
-import { loadProfile, saveProfile, initialsOf } from './game/profile.js'
+import {
+  loadProfile,
+  saveProfile,
+  makeProfile,
+  claimSeasons,
+  initialsOf,
+} from './game/profile.js'
 import { submitSeason } from './net/leaderboard.js'
 import { entryPriceFor, STARTING_BALANCE } from './game/economy.js'
 
@@ -41,9 +47,12 @@ export default function App() {
   const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
-    setGames(load(STORE, []))
+    const saved = loadProfile()
+    const history = claimSeasons(load(STORE, []), saved)
+    setGames(history)
+    save(STORE, history)
     setBalance(load(PURSE, STARTING_BALANCE))
-    setProfile(loadProfile())
+    setProfile(saved)
   }, [])
 
   function adjust(delta) {
@@ -68,6 +77,7 @@ export default function App() {
   function recordGame(result, roster, playedMode, prize) {
     if (prize > 0) adjust(prize)
     const entry = {
+      playerId: profile?.id ?? null,
       player: profile?.name ?? 'Guest',
       wins: result.wins,
       losses: result.losses,
@@ -101,7 +111,13 @@ export default function App() {
   }
 
   function storeProfile(next) {
-    setProfile(saveProfile(next))
+    // Keep the existing id on a rename so the history follows the person.
+    const full = profile ? { ...profile, ...next } : makeProfile(next)
+    saveProfile(full)
+    setProfile(full)
+    const claimed = claimSeasons(games, full)
+    setGames(claimed)
+    save(STORE, claimed)
     setEditingProfile(false)
   }
 

@@ -2,6 +2,7 @@
 
 create table if not exists public.seasons (
   id         bigserial primary key,
+  player_id  text,
   player     text        not null check (char_length(player) between 1 and 18),
   wins       int         not null check (wins between 0 and 17),
   losses     int         not null check (losses between 0 and 17),
@@ -14,6 +15,7 @@ create table if not exists public.seasons (
 );
 
 create index if not exists seasons_points_idx on public.seasons (points desc);
+create index if not exists seasons_player_idx on public.seasons (player_id);
 
 alter table public.seasons enable row level security;
 

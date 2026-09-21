@@ -62,10 +62,19 @@ before any payment code gets written.
 
 ## Profiles and the shared leaderboard
 
-On first visit players pick a name and a colour, stored in their browser. Every
-finished season is written to local history **first** and then posted to the
-shared board, so a network failure can never cost someone the game they just
-played.
+On first visit players pick a name and a colour, stored in their browser. Each
+profile also gets a stable id, generated once and kept for good.
+
+**Seasons are attributed to that id, not to the display name.** This is what
+keeps one human as one row on the leaderboard: reload the page and play again,
+rename yourself, or go back to seasons played before profiles existed — they
+all stay collapsed under a single player. Any local season missing an id is
+claimed by the current profile on load, since there is only ever one profile
+per browser.
+
+Every finished season is written to local history **first** and then posted to
+the shared board, so a network failure can never cost someone the game they
+just played.
 
 The leaderboard has two tabs: **Everyone** (one row per player, their single
 best season, ranked by points) and **My seasons**.
