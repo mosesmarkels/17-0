@@ -5,6 +5,9 @@ import HowToPlay from './components/HowToPlay.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
 import Prizes from './components/Prizes.jsx'
 import Wallet from './components/Wallet.jsx'
+import Profile from './components/Profile.jsx'
+import { loadProfile, saveProfile, initialsOf } from './game/profile.js'
+import { submitSeason } from './net/leaderboard.js'
 import { entryPriceFor, STARTING_BALANCE } from './game/economy.js'
 
 const STORE = 'seventeen-and-0.games'
@@ -34,10 +37,13 @@ export default function App() {
   const [balance, setBalance] = useState(STARTING_BALANCE)
   const [notice, setNotice] = useState('')
   const [runId, setRunId] = useState(0)
+  const [profile, setProfile] = useState(null)
+  const [editingProfile, setEditingProfile] = useState(false)
 
   useEffect(() => {
     setGames(load(STORE, []))
     setBalance(load(PURSE, STARTING_BALANCE))
+    setProfile(loadProfile())
   }, [])
 
   function adjust(delta) {
@@ -62,6 +68,7 @@ export default function App() {
   function recordGame(result, roster, playedMode, prize) {
     if (prize > 0) adjust(prize)
     const entry = {
+      player: profile?.name ?? 'Guest',
       wins: result.wins,
       losses: result.losses,
       strength: result.strength,
@@ -71,9 +78,12 @@ export default function App() {
       qb: roster.QB?.name ?? '—',
       at: Date.now(),
     }
+    // Save locally first, then push to the shared board. If the network call
+    // fails the season is still safely recorded here.
     const next = [...games, entry].sort((a, b) => b.points - a.points).slice(0, 50)
     setGames(next)
     save(STORE, next)
+    submitSeason(entry)
   }
 
   function start(m) {
@@ -88,6 +98,25 @@ export default function App() {
   function topUp() {
     adjust(STARTING_BALANCE)
     setNotice(`Added ${(STARTING_BALANCE / 100).toFixed(2)} in demo credits.`)
+  }
+
+  function storeProfile(next) {
+    setProfile(saveProfile(next))
+    setEditingProfile(false)
+  }
+
+  // First visit: ask for a name before anything else, since it is what the
+  // shared leaderboard identifies people by.
+  if (!profile || editingProfile) {
+    return (
+      <div className="app">
+        <Profile
+          profile={profile}
+          onSave={storeProfile}
+          onClose={() => setEditingProfile(false)}
+        />
+      </div>
+    )
   }
 
   return (
@@ -105,12 +134,20 @@ export default function App() {
               Prizes
             </button>
             <button className={view === 'board' ? 'on' : ''} onClick={() => setView('board')}>
-              My Rosters
+              Leaderboard
             </button>
             <button className={view === 'how' ? 'on' : ''} onClick={() => setView('how')}>
               Rules
             </button>
           </nav>
+          <button
+            className="avatar me-chip"
+            style={{ background: profile.color }}
+            onClick={() => setEditingProfile(true)}
+            title={`${profile.name} — edit profile`}
+          >
+            {initialsOf(profile.name)}
+          </button>
           <Wallet balance={balance} onTopUp={topUp} />
         </div>
       </header>
@@ -131,7 +168,7 @@ export default function App() {
       )}
       {view === 'how' && <HowToPlay />}
       {view === 'prizes' && <Prizes />}
-      {view === 'board' && <Leaderboard games={games} />}
+      {view === 'board' && <Leaderboard games={games} profile={profile} />}
 
       <footer className="foot">
         17-0 · demo credits only — no real money is taken or paid · stats are

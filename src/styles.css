@@ -411,3 +411,58 @@ input { font-family: inherit; }
   border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 10px;
   padding: 12px 16px; font-size: 13px; color: #cbb8f7;
 }
+
+/* ── Profile & shared leaderboard ───────────────────────────────────── */
+.avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+  font-family: var(--display); font-size: 13px; font-weight: 700;
+  color: #0a0d14; letter-spacing: 0.02em;
+}
+.avatar.big { width: 58px; height: 58px; font-size: 23px; }
+.me-chip { margin-left: auto; border: 2px solid var(--line); cursor: pointer; }
+.me-chip:hover { border-color: #3b4a69; }
+.hdr .nav { margin-left: auto; }
+.hdr .nav + .me-chip { margin-left: 16px; }
+
+.sheet-wrap {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px;
+}
+.sheet {
+  width: 100%; max-width: 380px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 16px; padding: 26px 22px;
+}
+.sheet-h {
+  font-family: var(--display); font-size: 29px; font-weight: 700;
+  letter-spacing: 0.01em; margin-bottom: 5px;
+}
+.sheet-p { color: var(--muted); font-size: 12.5px; margin-bottom: 20px; line-height: 1.5; }
+.avatar-row { display: flex; align-items: center; gap: 13px; }
+.sheet-input { margin-bottom: 0; flex: 1; }
+.swatches { display: flex; gap: 9px; margin: 18px 0 22px; }
+.swatch {
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform 0.12s, border-color 0.12s;
+}
+.swatch:hover { transform: scale(1.1); }
+.swatch.on { border-color: var(--text); transform: scale(1.12); }
+.sheet-actions { display: flex; gap: 10px; }
+.sheet-actions .btn { margin-top: 0; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+.tabs button {
+  font-family: var(--display); font-size: 14px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 7px 15px; border-radius: 8px; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--line);
+}
+.tabs button.on { color: var(--text); border-color: var(--orange); background: var(--panel-2); }
+
+.lb-name { font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+.lb-row.me { background: rgba(245, 130, 31, 0.07); }
+.you {
+  font-family: var(--display); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; color: var(--orange);
+  border: 1px solid rgba(245, 130, 31, 0.4); border-radius: 4px; padding: 0 5px;
+}

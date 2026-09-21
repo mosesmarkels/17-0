@@ -60,6 +60,41 @@ the textbook definition of a lottery — so it would need a gaming licence, a
 processor that permits it, age and location verification, and legal advice
 before any payment code gets written.
 
+## Profiles and the shared leaderboard
+
+On first visit players pick a name and a colour, stored in their browser. Every
+finished season is written to local history **first** and then posted to the
+shared board, so a network failure can never cost someone the game they just
+played.
+
+The leaderboard has two tabs: **Everyone** (one row per player, their single
+best season, ranked by points) and **My seasons**.
+
+### Going global
+
+Out of the box `src/net/config.js` is empty, so the board runs in local-only
+mode and shows just the seasons played in that browser — the app says so
+plainly rather than pretending to be global. To connect every player:
+
+1. Create a free project at [supabase.com](https://supabase.com) (no card needed).
+2. In the SQL editor, run [`supabase/schema.sql`](supabase/schema.sql).
+3. In **Project Settings → API**, copy the *Project URL* and the *anon public*
+   key into `src/net/config.js`.
+4. Push. The workflow redeploys and the board goes global.
+
+The anon key belongs in the client — it ships in the bundle of every Supabase
+app — so committing it is fine. What protects the data is the row-level
+security in the schema, not secrecy of that key. There is deliberately no
+update or delete policy, so posted seasons cannot be rewritten or removed from
+a browser.
+
+**One honest limitation:** with no login, the insert policy trusts whoever is
+calling it, so a determined person could post a fabricated score or play under
+someone else's name. That is the price of a leaderboard with no accounts, and
+it is usually the right trade for a game among friends. Closing it means adding
+real auth (Supabase has it built in) so that seasons are tied to a verified
+user.
+
 ## Deploying
 
 Every push to `main` rebuilds the site and publishes it to GitHub Pages via
