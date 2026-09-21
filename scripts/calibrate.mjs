@@ -1,6 +1,7 @@
 import { POOL, simulate } from '../src/game/engine.js'
 import { TEAMS } from '../src/data/teams.js'
 import { SLOTS } from '../src/game/constants.js'
+import { PRIZES as CLASSIC_PRIZES, ENTRY_PRICE, REROLL_PRICE as RR } from '../src/game/economy.js'
 
 const byCombo = new Map()
 for (const p of POOL) {
@@ -14,8 +15,12 @@ for (const t of TEAMS) for (const era of t.eras) {
   if (players?.length) combos.push({ team: t.abbr, era, players, offers: new Set(players.map(p => p.pos)) })
 }
 const pick = (a) => a[(Math.random() * a.length) | 0]
-const PRIZES = { 17: 100, 16: 50, 15: 25, 14: 16, 13: 8, 12: 6, 11: 4, 10: 2, 9: 1 }
-const ENTRY = 3, REROLL = 1
+// Read straight from the app so the two can never drift apart.
+const PRIZES = Object.fromEntries(
+  Object.entries(CLASSIC_PRIZES).map(([w, cents]) => [w, cents / 100]),
+)
+const ENTRY = ENTRY_PRICE / 100
+const REROLL = RR / 100
 
 // "expert": keeps the best board seen across skips. "casual": commits to the
 // first acceptable board and often leaves skips unspent.

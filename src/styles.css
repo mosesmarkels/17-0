@@ -40,7 +40,10 @@ input { font-family: inherit; }
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
 }
-.hdr-in { display: flex; align-items: center; gap: 22px; height: 56px; }
+.hdr-in {
+  display: flex; align-items: center; gap: 18px; height: 56px;
+  padding-top: env(safe-area-inset-top);
+}
 .logo {
   font-family: var(--display); font-weight: 700; font-size: 26px;
   letter-spacing: 0.02em; color: var(--text); line-height: 1;
@@ -350,7 +353,7 @@ input { font-family: inherit; }
 
 /* ── Money ──────────────────────────────────────────────────────────── */
 .wallet {
-  margin-left: 14px; display: flex; flex-direction: column; align-items: flex-end;
+  margin-left: 10px; display: flex; flex-direction: column; align-items: flex-end;
   background: var(--panel); border: 1px solid var(--line);
   border-radius: 9px; padding: 5px 11px; line-height: 1.1;
   transition: border-color 0.15s;
@@ -420,10 +423,8 @@ input { font-family: inherit; }
   color: #0a0d14; letter-spacing: 0.02em;
 }
 .avatar.big { width: 58px; height: 58px; font-size: 23px; }
-.me-chip { margin-left: auto; border: 2px solid var(--line); cursor: pointer; }
+.me-chip { border: 2px solid var(--line); cursor: pointer; }
 .me-chip:hover { border-color: #3b4a69; }
-.hdr .nav { margin-left: auto; }
-.hdr .nav + .me-chip { margin-left: 16px; }
 
 .sheet-wrap {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
@@ -465,4 +466,75 @@ input { font-family: inherit; }
   font-family: var(--display); font-size: 9px; font-weight: 700;
   letter-spacing: 0.12em; color: var(--orange);
   border: 1px solid rgba(245, 130, 31, 0.4); border-radius: 4px; padding: 0 5px;
+}
+
+/* ── Phones ─────────────────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  /* The four nav items plus the logo, avatar and wallet cannot share a
+     56px bar at 375px, so navigation moves to a thumb-reachable bottom
+     bar and the header keeps only identity. */
+  .hdr-in { gap: 10px; }
+  /* backdrop-filter makes an element a containing block for its
+     position:fixed descendants, which would pin the nav to the bottom of the
+     header instead of the viewport. Drop it here and paint a solid bar. */
+  .hdr { backdrop-filter: none; background: var(--bg); }
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    margin: 0; gap: 0; justify-content: space-around;
+    background: rgba(5, 7, 13, 0.96);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav button {
+    flex: 1; padding: 13px 4px; font-size: 10px; letter-spacing: 0.06em;
+    border-bottom: none; border-top: 2px solid transparent;
+    min-height: 48px;
+  }
+  .nav button.on { border-top-color: var(--orange); background: rgba(245, 130, 31, 0.07); }
+  .me-chip { margin-left: auto; }
+
+  /* Clear the bottom bar. */
+  .app { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  .foot { padding: 16px 16px calc(20px + env(safe-area-inset-bottom)); }
+
+  /* iOS zooms the whole page when a focused input is under 16px. */
+  .search { font-size: 16px; padding: 12px 13px; }
+
+  /* Bigger targets for thumbs. */
+  .row-main { padding: 13px; min-height: 52px; }
+  .pick { padding: 9px 18px; font-size: 15px; min-height: 40px; }
+  .respin { padding: 10px 14px; min-height: 42px; }
+  .tabs button { flex: 1; padding: 11px 8px; min-height: 44px; }
+  .swatch { width: 38px; height: 38px; }
+  .wallet { padding: 6px 10px; }
+
+  /* Give the draft board more of the screen. */
+  .field { max-width: 100%; aspect-ratio: 5 / 4; margin-top: 18px; }
+  .game { padding-top: 14px; }
+  .reel-win { height: 62px; }
+  .reel-item { height: 62px; font-size: 32px; }
+  .spin-btn { width: 100%; margin-top: 20px; padding: 14px; font-size: 27px; }
+
+  .home { padding: 30px 0 40px; }
+  .modes { gap: 12px; }
+  .mode { padding: 20px 16px; }
+  .mode p { min-height: 0; }
+
+  .res { padding: 26px 0 40px; }
+  .res-actions { flex-direction: column; }
+  .meters { gap: 8px; }
+  .meter { padding: 10px 12px; min-width: 0; flex: 1; }
+  .meter .v { font-size: 22px; }
+
+  /* Four columns of currency will not fit; drop the odds into the record. */
+  .page table { font-size: 12px; }
+  .page th, .page td { padding: 7px 6px; }
+}
+
+@media (max-width: 420px) {
+  .wrap { padding: 0 12px; }
+  .nav button { font-size: 9px; }
+  .reels { gap: 8px; }
+  .jackpot-v { font-size: 38px; }
 }

@@ -12,37 +12,41 @@ full. A simulation then turns those seven picks into a 17-game record. Going
 
 ## The economy
 
-You start with **$21.00** in credits — seven Classic seasons. A **Classic**
-season costs **$3.00**; **Football IQ is free**. Extra re-rolls cost **$1.00**
-in either mode, once the free team and era skips are spent. Nine records pay,
-from 9-8 up to a perfect season.
+You start with **$21.00** in credits. A **Classic** season costs **$5.00**;
+**Football IQ is free**. Extra re-rolls cost **$1.00** in either mode, once the
+free team and era skips are spent. Nine records pay, from 9-8 up to a perfect
+season.
 
 | Record | Classic | Football IQ | Odds |
 | ------ | ------- | ----------- | ---- |
-| **17-0** | **$100** | $25 | 1 in 16,000 |
-| 16-1 | $50 | $15 | 1 in 2,174 |
-| 15-2 | $25 | $10 | 1 in 350 |
-| 14-3 | $16 | $6 | 1 in 94 |
-| 13-4 | $8 | $4 | 1 in 32 |
-| 12-5 | $6 | $3 | 1 in 13 |
-| 11-6 | $4 | $2 | 1 in 7 |
-| 10-7 | $2 | $1 | 1 in 5 |
-| 9-8 | $1 | $0.50 | 1 in 5 |
+| **17-0** | **$100** | $40 | 1 in 16,000 |
+| 16-1 | $80 | $24 | 1 in 2,174 |
+| 15-2 | $40 | $16 | 1 in 350 |
+| 14-3 | $26 | $10 | 1 in 94 |
+| 13-4 | $13 | $6.50 | 1 in 32 |
+| 12-5 | $10 | $5 | 1 in 13 |
+| 11-6 | $7 | $3.20 | 1 in 7 |
+| 10-7 | $3.50 | $1.60 | 1 in 5 |
+| 9-8 | $1.50 | $0.80 | 1 in 5 |
+
+The lower tiers were rescaled with the entry price so the return-to-player
+holds. The jackpot stays at $100: at 1 in 16,000 it moves the expected payout
+by less than a cent either way.
 
 **Football IQ is the earn-back loop.** It costs nothing to enter and pays the
-shallower table — about **$1.04 a season**, so roughly three Football IQ
+shallower table — about **$1.69 a season**, so roughly three Football IQ
 seasons fund one Classic entry. It is also the harder mode, since no stat lines
 are shown, which is the point: you earn credits on what you know about football
 rather than on what the box score tells you. You can never get stranded with an
 empty balance and no way to play.
 
-Expected payout is **$2.10** on a $3.00 entry — a 70% RTP against expert play,
-64% against casual play, so the house keeps roughly **$0.90 a season**. A $1.00
-re-roll adds about $0.35 of expected return, so re-rolls carry a fatter margin
-than the entry does and the house's edge *grows* as players buy them.
+Expected payout is **$3.52** on a $5.00 entry — a 70.3% RTP against expert
+play, 64% against casual play, so the house keeps roughly **$1.48 a season**. A
+$1.00 re-roll adds about $0.64 of expected return, and because that is less
+than it costs, the house's edge *grows* as players buy them.
 
 The headline figure is deliberately misleading on its own: at 1 in 16,000 the
-$100 jackpot supplies only **0.3%** of the expected payout. The economics live
+$100 jackpot supplies only **0.2%** of the expected payout. The economics live
 entirely in the small, frequent prizes.
 
 These numbers are fitted, not guessed. `npm run calibrate` replays 400,000
@@ -103,6 +107,19 @@ someone else's name. That is the price of a leaderboard with no accounts, and
 it is usually the right trade for a game among friends. Closing it means adding
 real auth (Supabase has it built in) so that seasons are tied to a verified
 user.
+
+## On phones
+
+The layout is built for a phone first. Navigation sits in a fixed bottom bar
+under the thumb rather than crowded into the header, which cannot hold the
+logo, four links, an avatar and a balance at 375px. Inputs are 16px so iOS does
+not zoom the page when one is focused, tap targets are at least 44px, and
+`env(safe-area-inset-*)` keeps content clear of the notch and home indicator.
+
+One trap worth knowing if you touch the header CSS: `backdrop-filter` makes an
+element a containing block for its `position: fixed` descendants, so with it
+applied the bottom nav pins to the bottom of the *header* instead of the
+viewport. The mobile breakpoint drops it and paints a solid bar instead.
 
 ## Deploying
 

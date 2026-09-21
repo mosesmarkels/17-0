@@ -19,8 +19,8 @@ export default function Prizes() {
     <div className="wrap page">
       <h2>Prizes &amp; Odds</h2>
       <p>
-        You start with <strong>{money(STARTING_BALANCE)}</strong> in credits —
-        seven Classic seasons. A Classic season costs{' '}
+        You start with <strong>{money(STARTING_BALANCE)}</strong> in credits. A
+        Classic season costs{' '}
         <strong>{money(ENTRY_PRICE)}</strong>,{' '}
         <strong>Football IQ is free</strong>, and extra re-rolls are{' '}
         <strong>{money(REROLL_PRICE)}</strong> each in either mode. You are paid
