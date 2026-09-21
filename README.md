@@ -1,5 +1,7 @@
 # 17-0
 
+**▶ Play it: https://mosesmarkels.github.io/17-0/**
+
 An NFL roster-building game in the style of [82-0](https://www.82-0.com), which
 does the same thing for the NBA.
 
@@ -49,6 +51,13 @@ licensed gambling almost everywhere — an entry fee plus chance plus a prize is
 the textbook definition of a lottery — so it would need a gaming licence, a
 processor that permits it, age and location verification, and legal advice
 before any payment code gets written.
+
+## Deploying
+
+Every push to `main` rebuilds the site and publishes it to GitHub Pages via
+`.github/workflows/deploy.yml` — there is nothing to run by hand. Production
+builds use a `/17-0/` base path (see `vite.config.js`) because Pages serves the
+site from a subdirectory; local `npm run dev` still runs from the root.
 
 ## Running it
 
