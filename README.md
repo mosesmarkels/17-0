@@ -1,0 +1,138 @@
+# 17-0
+
+An NFL roster-building game in the style of [82-0](https://www.82-0.com), which
+does the same thing for the NBA.
+
+Spin a slot machine that lands on an NFL franchise and a decade, draft the best
+player available from that team in that era, and repeat until your roster is
+full. A simulation then turns those seven picks into a 17-game record. Going
+17-0 is meant to be very nearly impossible.
+
+## The economy
+
+A season costs **$3.00**. Nine records pay, from 9-8 up to a **$100 perfect
+season**. Extra re-rolls cost **$1.00** once the free team and era skips are
+spent.
+
+| Record | Prize | Odds |
+| ------ | ----- | ---- |
+| **17-0** | **$100** | 1 in 16,000 |
+| 16-1 | $50 | 1 in 2,174 |
+| 15-2 | $25 | 1 in 350 |
+| 14-3 | $16 | 1 in 94 |
+| 13-4 | $8 | 1 in 32 |
+| 12-5 | $6 | 1 in 13 |
+| 11-6 | $4 | 1 in 7 |
+| 10-7 | $2 | 1 in 5 |
+| 9-8 | $1 | 1 in 5 |
+
+Expected payout is **$2.10** on a $3.00 entry — a 70% RTP against expert play,
+64% against casual play, so the house keeps roughly **$0.90 a season**. A $1.00
+re-roll adds about $0.35 of expected return, so re-rolls carry a fatter margin
+than the entry does and the house's edge *grows* as players buy them.
+
+The headline figure is deliberately misleading on its own: at 1 in 16,000 the
+$100 jackpot supplies only **0.3%** of the expected payout. The economics live
+entirely in the small, frequent prizes.
+
+These numbers are fitted, not guessed. `npm run calibrate` replays 400,000
+seasons against the live engine under both expert and casual strategies and
+prints the RTP, the house edge and the re-roll ladder. **Re-run it after any
+change to player ratings, position weights or the win curve** — all three move
+the odds.
+
+### This is demo credits, not money
+
+The balance is a number in `localStorage`. Nothing takes a payment or pays a
+prize, and no payment processor is wired up. Running this for real stakes is
+licensed gambling almost everywhere — an entry fee plus chance plus a prize is
+the textbook definition of a lottery — so it would need a gaming licence, a
+processor that permits it, age and location verification, and legal advice
+before any payment code gets written.
+
+## Running it
+
+```bash
+npm install
+npm run dev
+```
+
+Then open http://localhost:5180.
+
+To build a static copy for hosting: `npm run build` (output lands in `dist/`).
+
+## The roster
+
+Six rounds, six spots: **QB · RB · WR · WR · TE · DEF** (a full team defense).
+Each round you spin once, then pick any player from that franchise-and-decade
+who fits a spot you have not filled yet. You get one team re-spin and one era
+re-spin per game.
+
+## How scoring works
+
+Each position is scored with its own formula — passing yards and sacks are not
+comparable — and every player is then ranked *only against other players at the
+same position*, producing a hidden 0–100 rating. The draft board never shows
+that number; you see the stat line and read it yourself.
+
+Roster spots are **not** equally important. Each carries a weight:
+
+| Spot | Weight | Share of team strength |
+| ---- | ------ | ---------------------- |
+| QB   | 3.0    | 32% |
+| D/ST | 1.6    | 17% |
+| WR   | 1.4    | 15% (each) |
+| RB   | 1.3    | 14% |
+| TE   | 0.8    | 8%  |
+
+Team strength is `75% × weighted average + 25% × weak link`, where the weak
+link is whichever spot is costing the most — how far below the ceiling it sits,
+scaled by how much that spot matters. Strength then runs through a non-linear
+curve where each additional win is harder to earn than the last.
+
+The practical effect: take the best possible roster and swap in the *worst*
+quarterback in the pool and it goes 17-0 → 5-12. Do the same with the tight end
+and it only slips to 13-4.
+
+## Project layout
+
+```
+src/
+  data/
+    teams.js      32 franchises: colours, active decades, era-accurate names
+    players.js    ~2,070 players, keyed by franchise + decade + position
+    defenses.js   209 team-defense units, one per franchise per decade
+  game/
+    constants.js  decades, roster spots + weights, per-position stat lines
+    engine.js     ratings, the draft pool, and the season simulation
+  components/     Reel, Field, PlayerList, Game, Results, Home, HowToPlay…
+```
+
+## About the data
+
+Every number is a **full-season figure** for the years a player spent with that
+franchise inside that decade — not career totals and not per-game.
+
+Players are normalised to a full season *in their own era* — 14 games through
+1977, 16 through 2020, 17 since. Anyone who only played part of a season (a
+rookie who took over mid-year, a starter who missed time) carries a `g` field
+holding their average games played, and their volume stats are scaled up to the
+pace they were actually on; those rows are marked **PACE** in the draft list.
+Rate stats — passer rating, yards per carry, points allowed per game — already
+account for playing time and are never scaled, and no partial season is
+extrapolated more than 1.7×.
+
+Without this, active 2020s players get badly underrated: Drake Maye's 2,276
+rookie passing yards came in twelve starts, and taken flat they would grade him
+as a replacement-level starter rather than the ~3,200-yard pace he was on. The figures
+are carefully estimated for gameplay balance; they are not an official
+statistical record. Sacks were not an official NFL statistic until 1982 and
+tackles were unofficial for a long time after that, so older numbers in
+particular are best-available approximations.
+
+Because the engine reads raw statistical output the way the original does,
+high-volume modern passing eras grade out generously against the 1960s and 70s.
+
+Teams are shown by abbreviation and team colours. No NFL logos or marks are
+used, and no code or assets from 82-0 were copied — only the game concept was
+rebuilt from scratch for football.
