@@ -5,11 +5,10 @@ import HowToPlay from './components/HowToPlay.jsx'
 import Leaderboard from './components/Leaderboard.jsx'
 import Prizes from './components/Prizes.jsx'
 import Wallet from './components/Wallet.jsx'
-import { ENTRY_PRICE, prizeFor } from './game/economy.js'
+import { entryPriceFor, STARTING_BALANCE } from './game/economy.js'
 
 const STORE = 'seventeen-and-0.games'
 const PURSE = 'seventeen-and-0.balance'
-const STARTING_BALANCE = 2000 // $20.00 of demo credits
 
 function load(key, fallback) {
   try {
@@ -78,7 +77,8 @@ export default function App() {
   }
 
   function start(m) {
-    if (!spend(ENTRY_PRICE)) return
+    const price = entryPriceFor(m)
+    if (price > 0 && !spend(price)) return
     setNotice('')
     setMode(m)
     setRunId((n) => n + 1)

@@ -8,8 +8,10 @@
 // Re-run scripts/calibrate to re-validate after any change to ratings,
 // weights or the win curve -- all three move these odds.
 
-export const ENTRY_PRICE = 300 // $3.00 a season
-export const REROLL_PRICE = 100 // $1.00 a re-roll
+export const ENTRY_PRICE = 300 // $3.00 a season in Classic
+export const IQ_ENTRY_PRICE = 0 // Football IQ is free -- it is how you earn
+export const REROLL_PRICE = 100 // $1.00 a re-roll, in either mode
+export const STARTING_BALANCE = 2100 // $21.00 -- seven Classic seasons
 export const FREE_SKIPS = { team: 1, era: 1 }
 export const MAX_BOUGHT_REROLLS = 6
 
@@ -52,7 +54,30 @@ export const HOUSE = {
   jackpotShareOfPayout: 0.3, // % of expected payout carried by the jackpot
 }
 
-export const prizeFor = (wins) => PRIZES[wins] ?? 0
+// Football IQ costs nothing to enter, so it pays a much shallower table.
+// It is the earn-back loop: no stat lines, no jackpot, but you cannot go
+// broke and get stuck. Roughly $1.04 a season at the measured odds, so about
+// three Football IQ seasons funds one Classic entry.
+export const IQ_PRIZES = {
+  17: 2500,
+  16: 1500,
+  15: 1000,
+  14: 600,
+  13: 400,
+  12: 300,
+  11: 200,
+  10: 100,
+  9: 50,
+}
+
+export const entryPriceFor = (mode) => (mode === 'iq' ? IQ_ENTRY_PRICE : ENTRY_PRICE)
+
+export const tableFor = (mode) => (mode === 'iq' ? IQ_PRIZES : PRIZES)
+
+export const prizeFor = (wins, mode) => tableFor(mode)[wins] ?? 0
+
+// What a free Football IQ season is worth on average, at the measured odds.
+export const IQ_EXPECTED_EARN = 104 // $1.04
 
 export const money = (cents) =>
   (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })

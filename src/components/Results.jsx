@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SLOTS } from '../game/constants.js'
 import { labelFor } from '../game/engine.js'
 import RecordReveal from './RecordReveal.jsx'
-import { money, ENTRY_PRICE } from '../game/economy.js'
+import { money } from '../game/economy.js'
 
 function verdict(wins) {
   if (wins === 17) return 'Perfection. Nobody touched you.'
@@ -15,7 +15,7 @@ function verdict(wins) {
   return 'That is a top-three pick.'
 }
 
-export default function Results({ roster, result, prize, onPlayAgain, onHome }) {
+export default function Results({ roster, result, prize, mode, replayPrice, onPlayAgain, onHome }) {
   const [done, setDone] = useState(false)
   const perfect = result.wins === 17
 
@@ -38,11 +38,13 @@ export default function Results({ roster, result, prize, onPlayAgain, onHome }) 
         <div className={`payout${prize > 0 ? ' won' : ''}`}>
           {prize > 0 ? (
             <>
-              <span className="payout-k">YOU WON</span>
+              <span className="payout-k">{mode === 'iq' ? 'YOU EARNED' : 'YOU WON'}</span>
               <span className="payout-v">{money(prize)}</span>
             </>
           ) : (
-            <span className="payout-k">No prize — 9-8 or better pays</span>
+            <span className="payout-k">
+              {mode === 'iq' ? 'Nothing earned' : 'No prize'} — 9-8 or better pays
+            </span>
           )}
         </div>
 
@@ -83,7 +85,7 @@ export default function Results({ roster, result, prize, onPlayAgain, onHome }) 
 
         <div className="res-actions">
           <button className="btn" onClick={onPlayAgain}>
-            PLAY AGAIN · {money(ENTRY_PRICE)}
+            PLAY AGAIN{replayPrice > 0 ? ` · ${money(replayPrice)}` : ' · FREE'}
           </button>
           <button className="btn ghost" onClick={onHome}>HOME</button>
         </div>

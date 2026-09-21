@@ -12,21 +12,29 @@ full. A simulation then turns those seven picks into a 17-game record. Going
 
 ## The economy
 
-A season costs **$3.00**. Nine records pay, from 9-8 up to a **$100 perfect
-season**. Extra re-rolls cost **$1.00** once the free team and era skips are
-spent.
+You start with **$21.00** in credits — seven Classic seasons. A **Classic**
+season costs **$3.00**; **Football IQ is free**. Extra re-rolls cost **$1.00**
+in either mode, once the free team and era skips are spent. Nine records pay,
+from 9-8 up to a perfect season.
 
-| Record | Prize | Odds |
-| ------ | ----- | ---- |
-| **17-0** | **$100** | 1 in 16,000 |
-| 16-1 | $50 | 1 in 2,174 |
-| 15-2 | $25 | 1 in 350 |
-| 14-3 | $16 | 1 in 94 |
-| 13-4 | $8 | 1 in 32 |
-| 12-5 | $6 | 1 in 13 |
-| 11-6 | $4 | 1 in 7 |
-| 10-7 | $2 | 1 in 5 |
-| 9-8 | $1 | 1 in 5 |
+| Record | Classic | Football IQ | Odds |
+| ------ | ------- | ----------- | ---- |
+| **17-0** | **$100** | $25 | 1 in 16,000 |
+| 16-1 | $50 | $15 | 1 in 2,174 |
+| 15-2 | $25 | $10 | 1 in 350 |
+| 14-3 | $16 | $6 | 1 in 94 |
+| 13-4 | $8 | $4 | 1 in 32 |
+| 12-5 | $6 | $3 | 1 in 13 |
+| 11-6 | $4 | $2 | 1 in 7 |
+| 10-7 | $2 | $1 | 1 in 5 |
+| 9-8 | $1 | $0.50 | 1 in 5 |
+
+**Football IQ is the earn-back loop.** It costs nothing to enter and pays the
+shallower table — about **$1.04 a season**, so roughly three Football IQ
+seasons fund one Classic entry. It is also the harder mode, since no stat lines
+are shown, which is the point: you earn credits on what you know about football
+rather than on what the box score tells you. You can never get stranded with an
+empty balance and no way to play.
 
 Expected payout is **$2.10** on a $3.00 entry — a 70% RTP against expert play,
 64% against casual play, so the house keeps roughly **$0.90 a season**. A $1.00

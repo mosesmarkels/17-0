@@ -7,6 +7,7 @@ import {
   REROLL_PRICE,
   MAX_BOUGHT_REROLLS,
   prizeFor,
+  entryPriceFor,
   money,
 } from '../game/economy.js'
 import Reel from './Reel.jsx'
@@ -96,7 +97,7 @@ export default function Game({ mode, balance, spend, onHome, onFinish, onPlayAga
     setRoster(next)
     if (round >= ROUNDS) {
       const res = simulate(next)
-      const won = prizeFor(res.wins)
+      const won = prizeFor(res.wins, mode)
       setResult(res)
       setPrize(won)
       setPhase('done')
@@ -116,6 +117,8 @@ export default function Game({ mode, balance, spend, onHome, onFinish, onPlayAga
         roster={roster}
         result={result}
         prize={prize}
+        mode={mode}
+        replayPrice={entryPriceFor(mode)}
         onPlayAgain={onPlayAgain}
         onHome={onHome}
       />

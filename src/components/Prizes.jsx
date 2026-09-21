@@ -1,4 +1,14 @@
-import { PRIZES, ODDS, ENTRY_PRICE, REROLL_PRICE, HOUSE, money } from '../game/economy.js'
+import {
+  PRIZES,
+  IQ_PRIZES,
+  ODDS,
+  ENTRY_PRICE,
+  REROLL_PRICE,
+  IQ_EXPECTED_EARN,
+  STARTING_BALANCE,
+  HOUSE,
+  money,
+} from '../game/economy.js'
 
 const RECORDS = Object.keys(PRIZES)
   .map(Number)
@@ -9,14 +19,22 @@ export default function Prizes() {
     <div className="wrap page">
       <h2>Prizes &amp; Odds</h2>
       <p>
-        A season costs <strong>{money(ENTRY_PRICE)}</strong>. Extra re-rolls are{' '}
-        <strong>{money(REROLL_PRICE)}</strong> each. You are paid on your final
-        record.
+        You start with <strong>{money(STARTING_BALANCE)}</strong> in credits —
+        seven Classic seasons. A Classic season costs{' '}
+        <strong>{money(ENTRY_PRICE)}</strong>,{' '}
+        <strong>Football IQ is free</strong>, and extra re-rolls are{' '}
+        <strong>{money(REROLL_PRICE)}</strong> each in either mode. You are paid
+        on your final record.
       </p>
 
       <table>
         <thead>
-          <tr><th>Record</th><th>Prize</th><th>Odds</th></tr>
+          <tr>
+            <th>Record</th>
+            <th>Classic</th>
+            <th>Football IQ</th>
+            <th>Odds</th>
+          </tr>
         </thead>
         <tbody>
           {RECORDS.map((w) => (
@@ -25,6 +43,7 @@ export default function Prizes() {
                 {w}-{17 - w}{w === 17 ? ' — perfect season' : ''}
               </td>
               <td className={w === 17 ? 'jackpot' : ''}>{money(PRIZES[w])}</td>
+              <td>{money(IQ_PRIZES[w])}</td>
               <td>1 in {ODDS[w].toLocaleString()}</td>
             </tr>
           ))}
@@ -32,9 +51,20 @@ export default function Prizes() {
             <td>8-9 or worse</td>
             <td>—</td>
             <td>—</td>
+            <td>—</td>
           </tr>
         </tbody>
       </table>
+
+      <h3>Running out of credits</h3>
+      <p>
+        You can't get stranded. <strong>Football IQ costs nothing to enter</strong>{' '}
+        and pays a shallower table, worth about{' '}
+        <strong>{money(IQ_EXPECTED_EARN)}</strong> a season — so roughly three
+        Football IQ seasons fund one Classic entry. It is the harder mode, with
+        no stat lines to read, which is the point: you earn credits on what you
+        actually know about football rather than on what the box score tells you.
+      </p>
 
       <h3>The honest numbers</h3>
       <ul>
